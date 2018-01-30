@@ -1,4 +1,4 @@
-package TestTask.CollectionPro;
+package testtask.collectionpro;
 
 public abstract class Order implements Comparable {
 

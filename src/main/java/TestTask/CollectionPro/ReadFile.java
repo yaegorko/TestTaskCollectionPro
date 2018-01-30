@@ -1,4 +1,4 @@
-package TestTask.CollectionPro;
+package testtask.collectionpro;
 
 import java.io.BufferedReader;
 import java.io.FileInputStream;
@@ -10,12 +10,12 @@ import java.util.Set;
 
 public class ReadFile {
 
-    Set<OrderBook> orderBookSet= new HashSet();
+    Set<OrderBook> orderBookSet = new HashSet();
 
     String lineForParse = "Start";
 
-    public void readLines(String FILE_PATH) {
-        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(FILE_PATH), StandardCharsets.UTF_8))) {
+    public void readLines(String filePath) {
+        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
                parser(line);
@@ -27,12 +27,14 @@ public class ReadFile {
 
     private Order parser(String line) {
         Order order;
-        if(line.contains("AddOrder")) {
+        if (line.contains("AddOrder")) {
            order = addOrderParser(line);
-        } else if(line.contains("DeleteOrder")) {
+        } else if (line.contains("DeleteOrder")) {
            order = deleteOrderParser(line);
+        } else if (line.contains("version") || line.contains("Orders")) {
+            return new DeleteOrder("0", 0); //костыль
         } else {
-           throw new RuntimeException();
+            throw new RuntimeException();
         }
         return order;
     }
@@ -67,7 +69,7 @@ public class ReadFile {
     }
     
     private String readParameterFromLine(String parameter, String line) {
-        if(line.contains(parameter)) {
+        if (line.contains(parameter)) {
            lineForParse = line.substring(line.indexOf(parameter));
            int firstQuotes = lineForParse.indexOf("\"");
            int secondQuotes = lineForParse.indexOf("\"", firstQuotes + 1);
@@ -76,7 +78,7 @@ public class ReadFile {
         return line;
     }
 
-    private void isItNewBook(String book){
+    private void isItNewBook(String book) {
         OrderBook orderBook = new OrderBook(book);
         if (!orderBookSet.contains(orderBook)) {
             orderBookSet.add(orderBook);

@@ -1,4 +1,4 @@
-package TestTask.CollectionPro;
+package testtask.collectionpro;
 
 public class SellOrder extends Order {
 

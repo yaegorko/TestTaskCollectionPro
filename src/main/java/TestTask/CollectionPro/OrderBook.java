@@ -1,4 +1,4 @@
-package TestTask.CollectionPro;
+package testtask.collectionpro;
 
 import java.util.*;
 
@@ -15,8 +15,12 @@ public class OrderBook {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
+        if (this == o) {
+            return true;
+        }
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
         OrderBook orderBook = (OrderBook) o;
         return Objects.equals(bookName, orderBook.bookName);
     }
