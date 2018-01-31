@@ -5,20 +5,23 @@ import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
 
 public class ReadFile {
 
-    Set<OrderBook> orderBookSet = new HashSet();
+    Map<String, OrderBook> orderBookMap = new HashMap();
 
     String lineForParse = "Start";
-
+    int i = 0;
     public void readLines(String filePath) {
+        Order order;
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
-               parser(line);
+                order = parser(line);
+                if (!orderBookMap.isEmpty() && order.getOrderId() != 0) {
+                      orderBookMap.get(order.getBook()).setOrderToOrderBook(order);
+                }
             }
         } catch (IOException e) {
 
@@ -80,8 +83,8 @@ public class ReadFile {
 
     private void isItNewBook(String book) {
         OrderBook orderBook = new OrderBook(book);
-        if (!orderBookSet.contains(orderBook)) {
-            orderBookSet.add(orderBook);
+        if (!orderBookMap.containsKey(orderBook.bookName)) {
+            orderBookMap.put(book, orderBook);
         }
     }
 
