@@ -7,7 +7,7 @@ public class ReadFileTest {
 
     @Test
     public void test1() {
-        readFile.readLines("C:/1/or.txt");
+        readFile.readLines("C:/1/orders.xml");
 
     }
 }

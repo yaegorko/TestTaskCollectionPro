@@ -1,6 +1,6 @@
 package testtask.collectionpro;
 
-public abstract class Order implements Comparable {
+public abstract class Order{
 
     String book;
     String operation;

@@ -18,6 +18,10 @@ public class ReadFile {
         try (BufferedReader reader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath), StandardCharsets.UTF_8))) {
             String line;
             while ((line = reader.readLine()) != null) {
+                i++;
+                if (i == 189){
+                    System.out.println(i);
+                }
                 order = parser(line);
                 if (!orderBookMap.isEmpty() && order.getOrderId() != 0) {
                       orderBookMap.get(order.getBook()).setOrderToOrderBook(order);
@@ -26,6 +30,7 @@ public class ReadFile {
         } catch (IOException e) {
 
         }
+        System.out.println("stop");
     }
 
     private Order parser(String line) {

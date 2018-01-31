@@ -1,6 +1,6 @@
 package testtask.collectionpro;
 
-public class DeleteOrder extends Order {
+public class DeleteOrder extends Order implements Comparable<DeleteOrder> {
 
     public DeleteOrder(String book, int orderId) {
         this.book = book;
@@ -9,7 +9,7 @@ public class DeleteOrder extends Order {
     }
 
     @Override
-    public int compareTo(Object o) {
-        return 0;
+    public int compareTo(DeleteOrder o) {
+        return Integer.compare(orderId, o.orderId);
     }
 }
