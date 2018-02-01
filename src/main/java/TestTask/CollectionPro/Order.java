@@ -6,6 +6,15 @@ public abstract class Order{
     String operation;
     double price;
     int volume;
+
+    public void setVolume(int volume) {
+        this.volume = volume;
+    }
+
+    public int getVolume() {
+        return volume;
+    }
+
     int orderId;
 
     public int getOrderId() {

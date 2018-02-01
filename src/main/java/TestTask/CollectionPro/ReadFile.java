@@ -20,7 +20,7 @@ public class ReadFile {
             while ((line = reader.readLine()) != null) {
                 i++;
                 if (i == 189){
-                    System.out.println(i);
+                    System.out.println(i + " Stopper 1");
                 }
                 order = parser(line);
                 if (!orderBookMap.isEmpty() && order.getOrderId() != 0) {
@@ -30,7 +30,7 @@ public class ReadFile {
         } catch (IOException e) {
 
         }
-        System.out.println("stop");
+        System.out.println(i + " Stopper 2");
     }
 
     private Order parser(String line) {

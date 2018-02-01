@@ -17,9 +17,11 @@ public class OrderBook {
     public void setOrderToOrderBook(Order order) {
         if (order.getOperation().contains("BUY")) {
             addOrderToOrderBook(order, buySet);
+            checkBuyAndSell();
             return;
         } else if (order.getOperation().contains("SELL")) {
             addOrderToOrderBook(order, sellSet);
+            checkBuyAndSell();
             return;
         } else if (order.getOperation().contains("DELETE")) {
             deleteOrderFromBook(order);
@@ -42,44 +44,41 @@ public class OrderBook {
         allOrders.remove(order);
     }
 
-    private void chekBuyAndSell() {
-       Optional<Order> buyOrder = buySet.stream().findFirst();
-       Optional<Order> sellOrder = buySet.stream().findFirst();
-
-
+    private void checkBuyAndSell() {
+       Optional<? extends Order> buyOrder  = buySet.stream().findFirst();
+       Optional<? extends Order> sellOrder = sellSet.stream().findFirst();
+       if (!buyOrder.isPresent() || !sellOrder.isPresent()) {
+           return;
+       }
+       if (!isPriceEqual((BuyOrder) buyOrder.get(),(SellOrder) sellOrder.get())) {
+           return;
+       }
+       if (isEnoughVolumesForBuy((BuyOrder) buyOrder.get(),(SellOrder) sellOrder.get())){
+           int i = sellOrder.get().getVolume() - buyOrder.get().getVolume();
+           sellOrder.get().setVolume(i);
+//           System.out.println("Ордер " + ((SellOrder) sellOrder.get()).getOrderId()
+//                                + " на " + ((SellOrder) sellOrder.get()).getOperation()
+//                                + " " + ((SellOrder) sellOrder.get()).getVolume()
+//                                + "выполнен");
+           deleteOrderFromBook(buyOrder.get());
+           if (sellOrder.get().getVolume() == 0) {
+               deleteOrderFromBook(sellOrder.get());
+           }
+       } else {
+           int i = buyOrder.get().getVolume() - sellOrder.get().getVolume();
+           buyOrder.get().setVolume(i);
+           deleteOrderFromBook(sellOrder.get());
+           checkBuyAndSell();
+       }
     }
 
-// Для реализации на Мар
-//    Map<Integer, Order> buyMap  = new HashMap<>();
-//    Map<Integer, Order> sellMap = new HashMap<>();
-//
-//    public void setOrderToOrderBook(Order order) {
-//        if (order.getOperation().contains("BUY")) {
-//            addOrderToOrderBook(order, buyMap);
-//
-//            return;
-//        } else if (order.getOperation().contains("SELL")) {
-//            addOrderToOrderBook(order, sellMap);
-//            return;
-//        } else if (order.getOperation().contains("DELETE")) {
-//            deleteOrderFromBook(order.getOrderId(), this);
-//            return;
-//        }
-//    }
-//    private void checkMaps() {
-//    }
-//
-//    private void addOrderToOrderBook(Order order, Map map) {
-//        map.put(order.getOrderId(), order);
-//    }
-//
-//    private void deleteOrderFromBook(int orderId, OrderBook orderBook) {
-//        if (buyMap.containsKey(orderId)) {
-//            buyMap.remove(orderId);
-//        } else if (sellMap.containsKey(orderId)) {
-//            sellMap.remove(orderId);
-//        }
-//    }
+    private boolean isPriceEqual(BuyOrder buyOrder, SellOrder sellOrder) {
+        return buyOrder.getPrice() >= sellOrder.getPrice();
+    }
+
+    private boolean isEnoughVolumesForBuy(BuyOrder buyOrder, SellOrder sellOrder) {
+        return sellOrder.getVolume() >= buyOrder.getVolume();
+    }
 
     @Override
     public boolean equals(Object o) {
